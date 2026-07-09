@@ -1,0 +1,598 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+<title>Steady Hands | Price Bailey</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+<style>
+/* =========================================================
+   CONFIG: brand colours and copy live here for easy swaps.
+   Colours are PLACEHOLDERS. Replace with exact Price Bailey
+   brand hex and the approved logo before publishing.
+   ========================================================= */
+:root{
+  --pb-ink:#0d1a36;
+  --pb-navy:#132549;
+  --pb-panel:#1a3160;
+  --pb-magenta:#e5007d;
+  --pb-magenta-soft:#ff4aa6;
+  --pb-mint:#2fd6a5;
+  --pb-amber:#ffb23e;
+  --pb-red:#ff5468;
+  --pb-heart:#ff5a7a;
+  --pb-text:#eef3ff;
+  --pb-muted:#93a4c9;
+  --pb-line:#2a4680;
+}
+
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+html,body{margin:0;height:100%;}
+body{
+  background:radial-gradient(120% 100% at 50% 0%, #16274d 0%, var(--pb-ink) 55%, #0a1428 100%);
+  color:var(--pb-text);
+  font-family:"Inter",system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
+  display:flex;align-items:center;justify-content:center;min-height:100dvh;padding:16px;overflow:hidden;
+}
+
+.stage{
+  position:relative;width:100%;max-width:460px;aspect-ratio:9/16;
+  max-height:calc(100dvh - 32px);touch-action:none;
+  background:linear-gradient(180deg,var(--pb-navy),#0e1d3b);
+  border:1px solid var(--pb-line);border-radius:22px;overflow:hidden;
+  box-shadow:0 24px 60px rgba(0,0,0,.45),inset 0 1px 0 rgba(255,255,255,.04);
+}
+
+/* Brand bar */
+.brand{position:absolute;top:0;left:0;right:0;height:52px;z-index:5;
+  display:flex;align-items:center;gap:10px;padding:0 14px;pointer-events:none;
+  background:linear-gradient(180deg,rgba(13,26,54,.9),rgba(13,26,54,0));}
+.brand .logo{font-family:"Space Grotesk",sans-serif;font-weight:700;font-size:15px;letter-spacing:.2px;}
+.brand .logo b{color:var(--pb-magenta-soft);}
+.brand .tag{margin-left:auto;font-size:11px;color:var(--pb-muted);letter-spacing:.4px;}
+.soundBtn{pointer-events:auto;margin-left:10px;background:rgba(255,255,255,.06);
+  border:1px solid var(--pb-line);color:var(--pb-text);width:34px;height:34px;border-radius:9px;
+  font-size:15px;line-height:1;cursor:pointer;display:flex;align-items:center;justify-content:center;}
+.soundBtn:focus-visible{outline:2px solid var(--pb-magenta-soft);outline-offset:2px;}
+
+/* HUD */
+.hud{position:absolute;top:52px;left:0;right:0;z-index:5;
+  display:flex;align-items:center;justify-content:space-between;padding:8px 16px;pointer-events:none;}
+.hud .score .n{font-family:"Space Grotesk",sans-serif;font-size:26px;font-weight:700;line-height:1;}
+.hud .score .l{font-size:10px;color:var(--pb-muted);letter-spacing:1.5px;text-transform:uppercase;}
+.hud .mid{text-align:center;}
+.hud .combo{font-size:13px;font-weight:600;color:var(--pb-amber);min-height:16px;}
+.hud .round{font-size:10px;color:var(--pb-muted);letter-spacing:1.2px;text-transform:uppercase;}
+.hud .lives{display:flex;gap:6px;align-items:center;}
+.hud .lives .cap{font-size:9px;color:var(--pb-muted);letter-spacing:1px;text-transform:uppercase;margin-right:2px;}
+.hud .heart{width:17px;height:17px;fill:var(--pb-heart);
+  filter:drop-shadow(0 0 6px rgba(255,90,122,.55));transition:.25s;}
+.hud .heart.spent{fill:var(--pb-line);filter:none;}
+
+canvas{position:absolute;inset:0;width:100%;height:100%;display:block;}
+
+/* Countdown */
+.countdown{position:absolute;inset:0;z-index:7;display:flex;align-items:center;justify-content:center;pointer-events:none;}
+.countdown[hidden]{display:none;}
+.countdown .num{font-family:"Space Grotesk",sans-serif;font-weight:700;font-size:112px;line-height:1;text-shadow:0 0 40px rgba(229,0,125,.5);}
+.countdown .num.go{color:var(--pb-mint);font-size:80px;text-shadow:0 0 40px rgba(47,214,165,.6);}
+.countdown .ring{position:absolute;width:170px;height:170px;border-radius:50%;border:2px solid rgba(255,255,255,.14);}
+.pulseIn{animation:pulseIn .6s ease-out;}
+@keyframes pulseIn{0%{transform:scale(.5);opacity:0;}30%{opacity:1;}100%{transform:scale(1.25);opacity:0;}}
+
+/* Flash */
+.flash{position:absolute;left:0;right:0;top:40%;z-index:6;text-align:center;
+  font-family:"Space Grotesk",sans-serif;font-weight:700;font-size:28px;pointer-events:none;opacity:0;}
+.flash.show{animation:pop .55s ease-out;}
+@keyframes pop{0%{opacity:0;transform:translateY(10px) scale(.9);}22%{opacity:1;transform:none;}100%{opacity:0;transform:translateY(-9px);}}
+
+/* Screens */
+.screen{position:absolute;inset:0;z-index:8;display:flex;flex-direction:column;align-items:center;
+  justify-content:center;text-align:center;gap:13px;padding:36px 26px;
+  background:rgba(9,18,38,.85);backdrop-filter:blur(6px);overflow-y:auto;}
+.screen[hidden]{display:none;}
+.screen h1{font-family:"Space Grotesk",sans-serif;font-weight:700;margin:0;font-size:38px;line-height:1.04;letter-spacing:-.5px;}
+.screen h2{font-family:"Space Grotesk",sans-serif;font-weight:600;margin:0;font-size:29px;}
+.screen .sub{color:var(--pb-muted);font-size:13.5px;max-width:310px;line-height:1.5;margin:0;}
+.how{background:rgba(255,255,255,.04);border:1px solid var(--pb-line);border-radius:14px;padding:14px 16px;max-width:330px;text-align:left;}
+.how ol{margin:0;padding-left:20px;}
+.how li{font-size:13px;line-height:1.5;color:#cfdcf5;margin-bottom:6px;}
+.how li:last-child{margin-bottom:0;}
+.legend{display:flex;gap:14px;justify-content:center;margin-top:2px;flex-wrap:wrap;}
+.legend .item{display:flex;align-items:center;gap:6px;font-size:12px;color:#cfdcf5;}
+.legend .sw{width:22px;height:11px;border-radius:3px;}
+.legend .sw.hit{background:var(--pb-mint);}
+.legend .sw.avoid{background:var(--pb-red);}
+.legend .sw.mark{background:var(--pb-magenta-soft);width:4px;height:16px;border-radius:2px;}
+
+.btn{appearance:none;border:0;cursor:pointer;font-family:"Space Grotesk",sans-serif;font-weight:600;
+  font-size:17px;padding:15px 26px;border-radius:13px;width:100%;max-width:320px;transition:transform .12s,filter .12s;}
+.btn:active{transform:translateY(1px) scale(.99);}
+.btn:focus-visible{outline:3px solid var(--pb-magenta-soft);outline-offset:3px;}
+.btn.primary{background:var(--pb-magenta);color:#fff;box-shadow:0 10px 24px rgba(229,0,125,.35);}
+.btn.primary:hover{filter:brightness(1.06);}
+.btn.ghost{background:transparent;color:var(--pb-text);border:1px solid var(--pb-line);}
+.btn.ghost:hover{background:rgba(255,255,255,.05);}
+
+.result-stats{display:flex;gap:24px;justify-content:center;margin:2px 0 6px;}
+.result-stats .n{font-family:"Space Grotesk",sans-serif;font-weight:700;font-size:30px;line-height:1;}
+.result-stats .n.hi{color:var(--pb-amber);}
+.result-stats .l{font-size:10px;color:var(--pb-muted);letter-spacing:1.4px;text-transform:uppercase;margin-top:5px;}
+.stack{display:flex;flex-direction:column;gap:11px;width:100%;align-items:center;}
+.privacy{font-size:11px;color:var(--pb-muted);max-width:300px;line-height:1.5;}
+.privacy a{color:var(--pb-magenta-soft);text-decoration:underline;}
+
+@media (prefers-reduced-motion: reduce){ .flash.show,.pulseIn{animation:none;opacity:1;} }
+</style>
+</head>
+<body>
+<div class="stage" id="stage">
+
+  <div class="brand">
+    <span class="logo">Price <b>Bailey</b></span>
+    <span class="tag">STEADY HANDS</span>
+    <button class="soundBtn" id="soundBtn" aria-label="Toggle heartbeat sound" title="Sound">&#128266;</button>
+  </div>
+
+  <div class="hud" id="hud" hidden>
+    <div class="score"><div class="n" id="scoreN">0</div><div class="l">Score</div></div>
+    <div class="mid">
+      <div class="combo" id="comboN">&nbsp;</div>
+      <div class="round" id="roundN">Round 1</div>
+    </div>
+    <div class="lives" id="lives">
+      <span class="cap">Lives</span>
+      <svg class="heart" viewBox="0 0 24 24"><path d="M12 21s-7.5-4.7-10-9.2C.5 8.6 2 5 5.4 5c2 0 3.3 1.1 4.1 2.3H10c.9-1.2 2.2-2.3 4.1-2.3C17.5 5 19 8.6 17.5 11.8 15 16.3 12 21 12 21z"/></svg>
+      <svg class="heart" viewBox="0 0 24 24"><path d="M12 21s-7.5-4.7-10-9.2C.5 8.6 2 5 5.4 5c2 0 3.3 1.1 4.1 2.3H10c.9-1.2 2.2-2.3 4.1-2.3C17.5 5 19 8.6 17.5 11.8 15 16.3 12 21 12 21z"/></svg>
+      <svg class="heart" viewBox="0 0 24 24"><path d="M12 21s-7.5-4.7-10-9.2C.5 8.6 2 5 5.4 5c2 0 3.3 1.1 4.1 2.3H10c.9-1.2 2.2-2.3 4.1-2.3C17.5 5 19 8.6 17.5 11.8 15 16.3 12 21 12 21z"/></svg>
+    </div>
+  </div>
+
+  <canvas id="game"></canvas>
+
+  <div class="countdown" id="countdown" hidden>
+    <div class="ring pulseIn" id="cdRing"></div>
+    <div class="num" id="cdNum">3</div>
+  </div>
+
+  <div class="flash" id="flash"></div>
+
+  <div class="screen" id="titleScreen">
+    <h1>Steady<br>Hands</h1>
+    <p class="sub">A Price Bailey precision challenge. Lift each prescription with a steady hand.</p>
+    <div class="how">
+      <ol>
+        <li>A marker sweeps across the track.</li>
+        <li>Tap when it crosses the <b>green zone</b> to file the prescription.</li>
+        <li>Hit the centre for a clean lift bonus.</li>
+        <li>Each round gets faster and tighter, and the green zone starts to move.</li>
+        <li>Further in, <b>pink zones</b> appear. Never tap on pink.</li>
+        <li>Three slips ends the shift.</li>
+      </ol>
+      <div class="legend">
+        <span class="item"><span class="sw hit"></span>Tap</span>
+        <span class="item"><span class="sw avoid"></span>Avoid</span>
+        <span class="item"><span class="sw mark"></span>Marker</span>
+      </div>
+    </div>
+    <button class="btn primary" id="startBtn">Start shift</button>
+    <p class="privacy">Tap anywhere to lift. Space or Enter works too.</p>
+  </div>
+
+  <div class="screen" id="overScreen" hidden>
+    <h2>Shift complete</h2>
+    <p class="sub" id="perfMsg">Nicely handled.</p>
+    <div class="result-stats">
+      <div class="cell"><div class="n" id="finalScore">0</div><div class="l">Score</div></div>
+      <div class="cell"><div class="n hi" id="bestScore">0</div><div class="l">Best</div></div>
+    </div>
+    <div class="stack">
+      <button class="btn primary" id="leadBtn">Leave your details</button>
+      <button class="btn ghost" id="againBtn">Play again</button>
+    </div>
+    <p class="privacy">We only use your details to follow up about your enquiry.
+      See our <a href="https://www.pricebailey.co.uk/privacy-policy/" target="_blank" rel="noopener">privacy notice</a>.</p>
+  </div>
+
+</div>
+
+<script>
+/* =========================================================
+   STEADY HANDS  (tap-timing build)
+   Tap when the marker crosses the green zone to file the
+   prescription. Wins drop into the file tray, misses are
+   thrown to the bin. Heartbeat speeds up as you progress and
+   dips on misses, with a sound synced to its rhythm.
+   ========================================================= */
+
+/* ---- PLACEHOLDER PRESCRIPTIONS -----------------------------
+   TODO: replace with the client-provided healthcare accountancy
+   terms and healthcare issues. Text only. Keep them short. */
+var PRESCRIPTIONS = [
+  "Cash flow review","Locum payroll","Partnership accounts","Practice benchmarking",
+  "VAT on healthcare","Superannuation check","Capital allowances","Incorporation review",
+  "Profit share planning","Practice merger support"
+];
+
+/* ---- WPForms lead capture (per Price Bailey spec) ----------
+   Form ID 72332. Score -> wpf72332_23. Game URL -> wpf72332_31.
+   Opens in a new tab. TODO before publishing: confirm the live
+   GitHub Pages URL and that field IDs match this game's form. */
+function openEnquiryForm(finalScore){
+  var s=Math.max(0,Math.floor(finalScore));
+  var gameUrl=encodeURIComponent(window.location.href);
+  var formUrl="https://www.pricebailey.co.uk/enquiry-form/game/?wpf72332_23="+encodeURIComponent(s)+"&wpf72332_31="+gameUrl;
+  window.open(formUrl,"_blank");
+}
+
+/* ---- High-score storage ---- */
+var memBest=0;
+function getBest(){ try{ return parseInt(localStorage.getItem("pb_steadyhands_best")||"0",10)||0; }catch(e){ return memBest; } }
+function setBest(v){ try{ localStorage.setItem("pb_steadyhands_best",String(v)); }catch(e){ memBest=v; } }
+
+/* ---- Setup ---- */
+var stage=document.getElementById("stage"), canvas=document.getElementById("game"), ctx=canvas.getContext("2d");
+var reduceMotion=window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+var W=0,H=0,DPR=1;
+function resize(){
+  var r=stage.getBoundingClientRect();
+  DPR=Math.min(window.devicePixelRatio||1,2); W=r.width; H=r.height;
+  canvas.width=Math.round(W*DPR); canvas.height=Math.round(H*DPR); ctx.setTransform(DPR,0,0,DPR,0,0);
+}
+window.addEventListener("resize",resize);
+
+/* ---- State ---- */
+var state="title"; // title | countdown | playing | over
+var score=0,combo=0,slips=0,level=0;
+var tool=0,dir=1,speed=0.55,locked=false;
+var currentRx=PRESCRIPTIONS[0];
+
+var greenBase=0.5,greenHalf=0.16,greenAmp=0,greenFreq=0.7,greenCenter=0.5;
+var reds=[];
+
+/* Heartbeat */
+var heartRate=1.05, beatPhase=0, pulseKick=0, slipTint=0;
+var GREEN=[47,214,165], RED=[255,84,104];
+
+var shake=0, particles=[];
+/* Prescription card animation: idle -> file (win) or toss (miss) -> done */
+var card={mode:"idle",t:0}; var CARD_DUR=0.66;
+
+/* ---- Difficulty per round ---- */
+function configureRound(){
+  speed    = Math.min(0.55 + level*0.075, 1.95);
+  greenHalf= Math.max(0.16 - level*0.009, 0.05);
+  greenAmp = level>=3 ? Math.min((level-2)*0.016, 0.15) : 0;
+  greenFreq= 0.55 + level*0.035;
+  greenBase= 0.26 + Math.random()*0.48;
+  reds=[];
+  var count = level>=10 ? 2 : (level>=6 ? 1 : 0);
+  var guard = greenHalf + greenAmp + 0.14;   // bigger reds need more clearance
+  var tries=0;
+  while(reds.length<count && tries<50){
+    tries++;
+    var c=0.16+Math.random()*0.68;
+    if(Math.abs(c-greenBase)<guard) continue;
+    var ok=true;
+    for(var k=0;k<reds.length;k++){ if(Math.abs(c-reds[k].center)<0.24){ok=false;break;} }
+    if(ok) reds.push({center:c, half:0.09});   // larger avoid zones
+  }
+}
+function newRound(){
+  configureRound();
+  currentRx=PRESCRIPTIONS[(Math.random()*PRESCRIPTIONS.length)|0];
+  tool=Math.random()<0.5?0:1; dir=tool<0.5?1:-1;
+  card.mode="idle"; card.t=0; locked=false;
+  document.getElementById("roundN").textContent="Round "+(level+1);
+}
+
+/* ---- Audio (heartbeat, synced to rhythm) ---- */
+var audioCtx=null, soundOn=true;
+function initAudio(){
+  if(!audioCtx){ try{ audioCtx=new (window.AudioContext||window.webkitAudioContext)(); }catch(e){ audioCtx=null; } }
+  if(audioCtx && audioCtx.state==="suspended") audioCtx.resume();
+}
+function thump(at,freq,vol){
+  var o=audioCtx.createOscillator(), g=audioCtx.createGain();
+  o.type="sine"; o.frequency.setValueAtTime(freq,at);
+  o.frequency.exponentialRampToValueAtTime(freq*0.55,at+0.12);
+  g.gain.setValueAtTime(0.0001,at);
+  g.gain.exponentialRampToValueAtTime(vol,at+0.008);
+  g.gain.exponentialRampToValueAtTime(0.0001,at+0.17);
+  o.connect(g); g.connect(audioCtx.destination); o.start(at); o.stop(at+0.22);
+}
+function playHeartbeat(){
+  if(!soundOn||!audioCtx) return;
+  var excite=Math.min(1,Math.max(0,(heartRate-1.05)/(2.6-1.05)));
+  var v=0.5+0.35*excite, now=audioCtx.currentTime;
+  thump(now,58,v);          // lub
+  thump(now+0.14,44,v*0.7); // dub
+}
+
+/* ---- Flow ---- */
+function startGame(){
+  initAudio();
+  score=0;combo=0;slips=0;level=0;particles=[];pulseKick=0;slipTint=0;heartRate=1.05;beatPhase=0;
+  document.getElementById("titleScreen").hidden=true;
+  document.getElementById("overScreen").hidden=true;
+  document.getElementById("hud").hidden=false;
+  newRound(); updateHud();
+  runCountdown(function(){ state="playing"; });
+}
+function runCountdown(done){
+  state="countdown";
+  var cd=document.getElementById("countdown"),num=document.getElementById("cdNum"),ring=document.getElementById("cdRing");
+  cd.hidden=false; var seq=["3","2","1","Go"],i=0;
+  function step(){
+    num.textContent=seq[i]; num.classList.toggle("go",seq[i]==="Go");
+    num.classList.remove("pulseIn");void num.offsetWidth;num.classList.add("pulseIn");
+    ring.classList.remove("pulseIn");void ring.offsetWidth;ring.classList.add("pulseIn");
+    i++; if(i<seq.length) setTimeout(step,600); else setTimeout(function(){ cd.hidden=true; done&&done(); },480);
+  }
+  step();
+}
+function endGame(){
+  state="over";
+  var best=getBest(); if(score>best){best=score;setBest(best);}
+  document.getElementById("finalScore").textContent=score;
+  document.getElementById("bestScore").textContent=best;
+  document.getElementById("perfMsg").textContent=perfMessage(level);
+  document.getElementById("hud").hidden=true;
+  document.getElementById("overScreen").hidden=false;
+}
+function perfMessage(n){
+  if(n>=12) return "Exceptional. A genuinely steady hand.";
+  if(n>=8)  return "Strong work. The practice ran smoothly.";
+  if(n>=4)  return "Nicely handled. A solid shift.";
+  if(n>=2)  return "Good start. Have another go.";
+  return "Warming up. Try one more.";
+}
+
+/* ---- Input ---- */
+function attemptLift(){
+  if(state!=="playing"||locked) return;
+  locked=true;
+  var onRed=false;
+  for(var i=0;i<reds.length;i++){ if(Math.abs(tool-reds[i].center)<=reds[i].half){ onRed=true; break; } }
+  var offset=Math.abs(tool-greenCenter), result;
+  if(onRed) result="slip";
+  else if(offset<=greenHalf*0.34) result="clean";
+  else if(offset<=greenHalf) result="ok";
+  else result="slip";
+
+  if(result==="slip"){
+    combo=0; slips++;
+    slipTint=1; pulseKick=0;
+    heartRate=Math.max(0.72, heartRate-0.5);   // heartbeat slows on a miss
+    shake=reduceMotion?0:12;
+    card.mode="toss"; card.t=0;                 // prescription thrown away
+    showFlash(onRed?"Avoid the pink":"Slip","#ff5468");
+  } else {
+    combo++;
+    var base=result==="clean"?100:55, gained=base*combo;
+    score+=gained; level++;
+    pulseKick=result==="clean"?1:0.6;
+    card.mode="file"; card.t=0;                 // prescription filed
+    spawnParticles(trayPos().x, trayPos().y, result==="clean"?22:12);
+    showFlash((result==="clean"?"Filed  +":"Filed  +")+gained, result==="clean"?"#ffb23e":"#2fd6a5");
+  }
+  updateHud();
+  setTimeout(function(){
+    if(state!=="playing") return;
+    if(slips>=3){ endGame(); return; }
+    newRound();
+  },700);
+}
+function showFlash(text,color){
+  var f=document.getElementById("flash");
+  f.textContent=text; f.style.color=color;
+  f.classList.remove("show");void f.offsetWidth;f.classList.add("show");
+}
+function updateHud(){
+  document.getElementById("scoreN").textContent=score;
+  document.getElementById("comboN").innerHTML=combo>1?("Combo x"+combo):"&nbsp;";
+  var hearts=document.querySelectorAll(".lives .heart");
+  for(var i=0;i<hearts.length;i++) hearts[i].classList.toggle("spent", i<slips);
+}
+
+stage.addEventListener("pointerdown",function(e){ if(state==="playing"){ e.preventDefault(); attemptLift(); } });
+window.addEventListener("keydown",function(e){
+  if(e.code==="Space"||e.code==="Enter"){ e.preventDefault();
+    if(state==="playing") attemptLift();
+    else if(state==="title"||state==="over") startGame();
+  }
+});
+document.getElementById("startBtn").addEventListener("click",startGame);
+document.getElementById("againBtn").addEventListener("click",startGame);
+document.getElementById("leadBtn").addEventListener("click",function(){ openEnquiryForm(score); });
+document.getElementById("soundBtn").addEventListener("click",function(){
+  initAudio(); soundOn=!soundOn;
+  this.innerHTML=soundOn?"&#128266;":"&#128263;";
+});
+
+/* ---- Particles ---- */
+function spawnParticles(cx,cy,n){
+  for(var i=0;i<n;i++){ var a=Math.random()*Math.PI*2, sp=1+Math.random()*3;
+    particles.push({x:cx,y:cy,vx:Math.cos(a)*sp,vy:Math.sin(a)*sp-1,life:1,size:2+Math.random()*3}); }
+}
+
+/* ---- Helpers ---- */
+function lerp(a,b,p){return a+(b-a)*p;}
+function easeInOut(p){return p<0.5?2*p*p:1-Math.pow(-2*p+2,2)/2;}
+function mix(c1,c2,t){return "rgb("+Math.round(c1[0]+(c2[0]-c1[0])*t)+","+Math.round(c1[1]+(c2[1]-c1[1])*t)+","+Math.round(c1[2]+(c2[2]-c1[2])*t)+")";}
+function roundRect(x,y,w,h,r){ctx.beginPath();ctx.moveTo(x+r,y);ctx.arcTo(x+w,y,x+w,y+h,r);ctx.arcTo(x+w,y+h,x,y+h,r);ctx.arcTo(x,y+h,x,y,r);ctx.arcTo(x,y,x+w,y,r);ctx.closePath();}
+function cardHome(){ return {x:W*0.5, y:H*0.26}; }
+function trayPos(){ return {x:W*0.30, y:H*0.88}; }
+function binPos(){ return {x:W*0.72, y:H*0.88}; }
+
+/* ---- Rendering ---- */
+function drawSlipShape(){
+  var w=W*0.58, h=H*0.145, x=-w/2, y=-h/2;
+  roundRect(x,y,w,h,10); ctx.fillStyle="#f5f7fc"; ctx.fill();
+  ctx.strokeStyle="rgba(0,0,0,.08)"; ctx.lineWidth=1; ctx.stroke();
+  roundRect(x,y,w,h*0.30,10); ctx.fillStyle="#e5007d"; ctx.fill();
+  ctx.fillStyle="#fff"; ctx.textBaseline="middle"; ctx.textAlign="left";
+  ctx.font="700 "+Math.round(H*0.016)+"px 'Space Grotesk',sans-serif";
+  ctx.fillText("Rx  Price Bailey Practice", x+13, y+h*0.15);
+  ctx.fillStyle="#12213f"; ctx.textAlign="center";
+  ctx.font="600 "+Math.round(H*0.021)+"px Inter,sans-serif";
+  ctx.fillText(currentRx, 0, y+h*0.60);
+  ctx.strokeStyle="rgba(18,33,63,.25)"; ctx.lineWidth=1;
+  ctx.beginPath(); ctx.moveTo(x+13,y+h*0.84); ctx.lineTo(x+w*0.55,y+h*0.84); ctx.stroke();
+  ctx.fillStyle="rgba(18,33,63,.5)"; ctx.textAlign="left";
+  ctx.font="400 "+Math.round(H*0.012)+"px Inter,sans-serif";
+  ctx.fillText("Signed", x+13, y+h*0.93);
+}
+function drawPrescription(){
+  if(card.mode==="done") return;
+  var home=cardHome(), x=home.x,y=home.y,scale=1,rot=0,alpha=1;
+  if(card.mode==="file"){
+    var p=easeInOut(Math.min(1,card.t/CARD_DUR)), t=trayPos();
+    x=lerp(home.x,t.x,p); y=lerp(home.y,t.y-H*0.03,p);
+    scale=1-0.55*p; rot=0.12*p; alpha=p>0.85?(1-(p-0.85)/0.15):1;
+  } else if(card.mode==="toss"){
+    var p2=Math.min(1,card.t/CARD_DUR), b=binPos();
+    x=lerp(home.x,b.x,p2);
+    y=lerp(home.y,b.y-H*0.03,p2)+Math.sin(p2*Math.PI)*(-H*0.10);
+    rot=p2*Math.PI*2.2; scale=1-0.45*p2; alpha=p2>0.7?(1-(p2-0.7)/0.3):1;
+  }
+  ctx.save(); ctx.globalAlpha=Math.max(0,alpha);
+  ctx.translate(x,y); ctx.rotate(rot); ctx.scale(scale,scale);
+  drawSlipShape(); ctx.restore();
+}
+function drawFileTray(){
+  var t=trayPos(), w=W*0.24, h=H*0.05;
+  ctx.save(); ctx.translate(t.x,t.y);
+  roundRect(-w*0.32,-h*1.35,w*0.42,h*0.5,4); ctx.fillStyle="#2a4680"; ctx.fill(); // tab
+  roundRect(-w/2,-h*0.95,w,h,6); ctx.fillStyle="#22406e"; ctx.fill();             // back
+  roundRect(-w/2,-h*0.15,w,h*0.72,6); ctx.fillStyle="#2f4f86"; ctx.fill();        // front
+  ctx.strokeStyle="rgba(255,255,255,.12)"; ctx.lineWidth=1; ctx.stroke();
+  ctx.fillStyle="#9fb0d4";
+  ctx.font="600 "+Math.round(H*0.012)+"px Inter,sans-serif"; ctx.textAlign="center"; ctx.textBaseline="middle";
+  ctx.fillText("Filed", 0, h*0.2);
+  ctx.restore();
+}
+function drawBin(){
+  var b=binPos(), w=W*0.10, h=H*0.055;
+  ctx.save(); ctx.translate(b.x,b.y);
+  ctx.strokeStyle="#5a6f96"; ctx.lineWidth=2; ctx.fillStyle="rgba(90,111,150,.14)";
+  ctx.beginPath(); ctx.moveTo(-w/2,-h*0.5); ctx.lineTo(w/2,-h*0.5);
+  ctx.lineTo(w*0.36,h*0.5); ctx.lineTo(-w*0.36,h*0.5); ctx.closePath(); ctx.fill(); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(-w*0.62,-h*0.5); ctx.lineTo(w*0.62,-h*0.5); ctx.stroke();
+  for(var i=-1;i<=1;i++){ ctx.beginPath(); ctx.moveTo(i*w*0.2,-h*0.35); ctx.lineTo(i*w*0.28,h*0.4); ctx.stroke(); }
+  ctx.fillStyle="#9fb0d4"; ctx.font="600 "+Math.round(H*0.012)+"px Inter,sans-serif";
+  ctx.textAlign="center"; ctx.textBaseline="top"; ctx.fillText("Discard", 0, h*0.62);
+  ctx.restore();
+}
+function drawTrack(now){
+  var trackY=H*0.50, trackX=W*0.12, trackW=W*0.76, trackH=H*0.030;
+  roundRect(trackX,trackY-trackH/2,trackW,trackH,trackH/2);
+  ctx.fillStyle="#12264a"; ctx.fill();
+  ctx.strokeStyle="rgba(255,255,255,.06)"; ctx.lineWidth=1; ctx.stroke();
+
+  for(var i=0;i<reds.length;i++){
+    var rw=reds[i].half*2*trackW, rx=trackX+reds[i].center*trackW-rw/2;
+    roundRect(rx,trackY-trackH/2-3,rw,trackH+6,(trackH+6)/2);
+    var rg=ctx.createLinearGradient(rx,0,rx+rw,0);
+    rg.addColorStop(0,"rgba(255,84,104,.25)"); rg.addColorStop(.5,"rgba(255,84,104,.92)"); rg.addColorStop(1,"rgba(255,84,104,.25)");
+    ctx.fillStyle=rg; ctx.fill();
+  }
+
+  greenCenter=greenBase + greenAmp*Math.sin(now*0.001*greenFreq*Math.PI*2);
+  var gw=greenHalf*2*trackW, gx=trackX+greenCenter*trackW-gw/2;
+  roundRect(gx,trackY-trackH/2-2,gw,trackH+4,(trackH+4)/2);
+  var g=ctx.createLinearGradient(gx,0,gx+gw,0);
+  g.addColorStop(0,"rgba(47,214,165,.25)"); g.addColorStop(.5,"rgba(47,214,165,.9)"); g.addColorStop(1,"rgba(47,214,165,.25)");
+  ctx.fillStyle=g; ctx.fill();
+  var ccx=trackX+greenCenter*trackW;
+  ctx.strokeStyle="rgba(255,255,255,.5)"; ctx.lineWidth=1.5;
+  ctx.beginPath(); ctx.moveTo(ccx,trackY-trackH); ctx.lineTo(ccx,trackY+trackH); ctx.stroke();
+
+  var mx=trackX+tool*trackW;
+  ctx.save(); ctx.shadowColor="rgba(255,74,166,.7)"; ctx.shadowBlur=14; ctx.fillStyle="#ff4aa6";
+  ctx.beginPath(); ctx.moveTo(mx,trackY-trackH*1.9);
+  ctx.lineTo(mx-trackH*0.9,trackY-trackH*3.1); ctx.lineTo(mx+trackH*0.9,trackY-trackH*3.1);
+  ctx.closePath(); ctx.fill(); ctx.restore();
+  ctx.fillStyle="#ff4aa6"; ctx.fillRect(mx-1.5,trackY-trackH*1.9,3,trackH*3.8);
+}
+
+/* Larger heartbeat, tempo and height driven by heartRate */
+function drawPulse(){
+  var baseY=H*0.70;
+  var excite=Math.min(1,Math.max(0,(heartRate-1.05)/(2.6-1.05)));
+  var amp=H*0.065 + H*0.055*excite + H*0.025*pulseKick;
+  var col=mix(GREEN,RED,slipTint);
+  var x0=W*0.05,x1=W*0.95;
+  ctx.save();
+  ctx.strokeStyle=col; ctx.globalAlpha=0.95; ctx.lineWidth=3.2;
+  ctx.lineJoin="round"; ctx.lineCap="round"; ctx.shadowColor=col; ctx.shadowBlur=14;
+  ctx.beginPath();
+  var BEATS=2, pts=170;
+  for(var i=0;i<=pts;i++){
+    var fx=i/pts, x=x0+fx*(x1-x0);
+    var phase=(((fx*BEATS - beatPhase)%1)+1)%1;
+    var y=baseY-beat(phase)*amp;
+    if(i===0)ctx.moveTo(x,y);else ctx.lineTo(x,y);
+  }
+  ctx.stroke(); ctx.restore();
+}
+function beat(p){
+  if(p<0.42||p>0.62) return 0;
+  var k=(p-0.42)/0.20;
+  if(k<0.25) return k/0.25*0.25;
+  if(k<0.4)  return 0.25-(k-0.25)/0.15*1.25;
+  if(k<0.55) return -1.0+(k-0.4)/0.15*2.0;
+  if(k<0.7)  return 1.0-(k-0.55)/0.15*1.3;
+  return -0.3+(k-0.7)/0.3*0.3;
+}
+
+/* ---- Loop ---- */
+var last=performance.now();
+function loop(now){
+  var dt=Math.min((now-last)/1000,0.05); last=now;
+  ctx.clearRect(0,0,W,H);
+
+  if(state==="playing"&&!locked){
+    tool+=dir*speed*dt;
+    if(tool>=1){tool=1;dir=-1;} if(tool<=0){tool=0;dir=1;}
+  }
+  // heartbeat: excite with level, slow on miss (handled at miss time)
+  var targetRate=Math.min(1.05 + level*0.09, 2.6);
+  if(state==="playing") heartRate += (targetRate-heartRate)*Math.min(1,dt*0.9);
+  beatPhase += heartRate*dt;
+  if(beatPhase>=1){ beatPhase-=1; if(state==="playing") playHeartbeat(); }
+
+  if(pulseKick>0) pulseKick=Math.max(0,pulseKick-dt*1.6);
+  if(slipTint>0) slipTint=Math.max(0,slipTint-dt*0.7);
+  if(shake>0) shake=Math.max(0,shake-dt*60);
+  if(card.mode==="file"||card.mode==="toss"){ card.t+=dt; if(card.t>=CARD_DUR) card.mode="done"; }
+
+  ctx.save();
+  if(shake>0) ctx.translate((Math.random()-0.5)*shake,(Math.random()-0.5)*shake);
+
+  if(state==="playing"||state==="countdown"){
+    drawFileTray(); drawBin();
+    drawTrack(now);
+    drawPulse();
+    for(var i=particles.length-1;i>=0;i--){
+      var p=particles[i]; p.x+=p.vx;p.y+=p.vy;p.vy+=0.12;p.life-=dt*1.4;
+      if(p.life<=0){particles.splice(i,1);continue;}
+      ctx.globalAlpha=Math.max(0,p.life); ctx.fillStyle="#2fd6a5";
+      ctx.beginPath(); ctx.arc(p.x,p.y,p.size,0,Math.PI*2); ctx.fill();
+    }
+    ctx.globalAlpha=1;
+    drawPrescription();
+  } else {
+    drawPulse();
+  }
+  ctx.restore();
+  requestAnimationFrame(loop);
+}
+
+resize();
+requestAnimationFrame(loop);
+</script>
+</body>
+</html>
