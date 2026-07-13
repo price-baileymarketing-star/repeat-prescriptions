@@ -11,15 +11,15 @@
 /* =========================================================
    CONFIG: brand colours and copy live here for easy swaps.
    Colours are PLACEHOLDERS. Replace with exact Price Bailey
-   brand hex and the approved logo before publishing.
+   brand hex before publishing. Logo is the repo PNG.
+   LAYOUT: landscape 16:9, built for tablet at an event stand.
    ========================================================= */
 :root{
   --pb-ink:#0d1a36;
   --pb-navy:#132549;
-  --pb-panel:#1a3160;
   --pb-magenta:#e5007d;
   --pb-magenta-soft:#ff4aa6;
-  --pb-mint:#27baa4;
+  --pb-mint:#2fd6a5;
   --pb-amber:#ffb23e;
   --pb-red:#ff5468;
   --pb-heart:#ff5a7a;
@@ -34,40 +34,41 @@ body{
   background:radial-gradient(120% 100% at 50% 0%, #16274d 0%, var(--pb-ink) 55%, #0a1428 100%);
   color:var(--pb-text);
   font-family:"Inter",system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
-  display:flex;align-items:center;justify-content:center;min-height:100dvh;padding:16px;overflow:hidden;
+  display:flex;align-items:center;justify-content:center;min-height:100dvh;padding:14px;overflow:hidden;
 }
 
+/* Landscape stage sized for tablet */
 .stage{
-  position:relative;width:100%;max-width:460px;aspect-ratio:9/16;
-  max-height:calc(100dvh - 32px);touch-action:none;
+  position:relative;width:100%;max-width:1024px;aspect-ratio:16/9;
+  max-height:calc(100dvh - 28px);touch-action:none;
   background:linear-gradient(180deg,var(--pb-navy),#0e1d3b);
-  border:1px solid var(--pb-line);border-radius:22px;overflow:hidden;
+  border:1px solid var(--pb-line);border-radius:20px;overflow:hidden;
   box-shadow:0 24px 60px rgba(0,0,0,.45),inset 0 1px 0 rgba(255,255,255,.04);
 }
 
 /* Brand bar */
 .brand{position:absolute;top:0;left:0;right:0;height:52px;z-index:5;
-  display:flex;align-items:center;gap:10px;padding:0 14px;pointer-events:none;
+  display:flex;align-items:center;gap:12px;padding:0 16px;pointer-events:none;
   background:linear-gradient(180deg,rgba(13,26,54,.9),rgba(13,26,54,0));}
-.brand .logo{font-family:"Space Grotesk",sans-serif;font-weight:700;font-size:15px;letter-spacing:.2px;}
-.brand .logo b{color:var(--pb-magenta-soft);}
-.brand .tag{margin-left:auto;font-size:11px;color:var(--pb-muted);letter-spacing:.4px;}
-.soundBtn{pointer-events:auto;margin-left:10px;background:rgba(255,255,255,.06);
+/* Price Bailey box logo. PNG must sit next to index.html in the repo root. */
+.brand .logo{height:30px;width:auto;display:block;}
+.brand .tag{font-size:11px;color:var(--pb-muted);letter-spacing:1.4px;}
+.soundBtn{pointer-events:auto;margin-left:auto;background:rgba(255,255,255,.06);
   border:1px solid var(--pb-line);color:var(--pb-text);width:34px;height:34px;border-radius:9px;
   font-size:15px;line-height:1;cursor:pointer;display:flex;align-items:center;justify-content:center;}
 .soundBtn:focus-visible{outline:2px solid var(--pb-magenta-soft);outline-offset:2px;}
 
-/* HUD */
-.hud{position:absolute;top:52px;left:0;right:0;z-index:5;
-  display:flex;align-items:center;justify-content:space-between;padding:8px 16px;pointer-events:none;}
-.hud .score .n{font-family:"Space Grotesk",sans-serif;font-size:26px;font-weight:700;line-height:1;}
+/* HUD: score left, round centre, hearts right */
+.hud{position:absolute;top:54px;left:0;right:0;z-index:5;
+  display:flex;align-items:center;justify-content:space-between;padding:4px 18px;pointer-events:none;}
+.hud .score .n{font-family:"Space Grotesk",sans-serif;font-size:28px;font-weight:700;line-height:1;}
 .hud .score .l{font-size:10px;color:var(--pb-muted);letter-spacing:1.5px;text-transform:uppercase;}
 .hud .mid{text-align:center;}
-.hud .combo{font-size:13px;font-weight:600;color:var(--pb-amber);min-height:16px;}
+.hud .combo{font-size:14px;font-weight:600;color:var(--pb-amber);min-height:17px;}
 .hud .round{font-size:10px;color:var(--pb-muted);letter-spacing:1.2px;text-transform:uppercase;}
-.hud .lives{display:flex;gap:6px;align-items:center;}
+.hud .lives{display:flex;gap:7px;align-items:center;}
 .hud .lives .cap{font-size:9px;color:var(--pb-muted);letter-spacing:1px;text-transform:uppercase;margin-right:2px;}
-.hud .heart{width:17px;height:17px;fill:var(--pb-heart);
+.hud .heart{width:19px;height:19px;fill:var(--pb-heart);
   filter:drop-shadow(0 0 6px rgba(255,90,122,.55));transition:.25s;}
 .hud .heart.spent{fill:var(--pb-line);filter:none;}
 
@@ -76,39 +77,50 @@ canvas{position:absolute;inset:0;width:100%;height:100%;display:block;}
 /* Countdown */
 .countdown{position:absolute;inset:0;z-index:7;display:flex;align-items:center;justify-content:center;pointer-events:none;}
 .countdown[hidden]{display:none;}
-.countdown .num{font-family:"Space Grotesk",sans-serif;font-weight:700;font-size:112px;line-height:1;text-shadow:0 0 40px rgba(229,0,125,.5);}
-.countdown .num.go{color:var(--pb-mint);font-size:80px;text-shadow:0 0 40px rgba(47,214,165,.6);}
-.countdown .ring{position:absolute;width:170px;height:170px;border-radius:50%;border:2px solid rgba(255,255,255,.14);}
+.countdown .num{font-family:"Space Grotesk",sans-serif;font-weight:700;font-size:104px;line-height:1;text-shadow:0 0 40px rgba(229,0,125,.5);}
+.countdown .num.go{color:var(--pb-mint);font-size:76px;text-shadow:0 0 40px rgba(47,214,165,.6);}
+.countdown .ring{position:absolute;width:160px;height:160px;border-radius:50%;border:2px solid rgba(255,255,255,.14);}
 .pulseIn{animation:pulseIn .6s ease-out;}
 @keyframes pulseIn{0%{transform:scale(.5);opacity:0;}30%{opacity:1;}100%{transform:scale(1.25);opacity:0;}}
 
 /* Flash */
-.flash{position:absolute;left:0;right:0;top:40%;z-index:6;text-align:center;
+.flash{position:absolute;left:0;right:0;top:31%;z-index:6;text-align:center;
   font-family:"Space Grotesk",sans-serif;font-weight:700;font-size:28px;pointer-events:none;opacity:0;}
 .flash.show{animation:pop .55s ease-out;}
 @keyframes pop{0%{opacity:0;transform:translateY(10px) scale(.9);}22%{opacity:1;transform:none;}100%{opacity:0;transform:translateY(-9px);}}
 
 /* Screens */
-.screen{position:absolute;inset:0;z-index:8;display:flex;flex-direction:column;align-items:center;
-  justify-content:center;text-align:center;gap:13px;padding:36px 26px;
-  background:rgba(9,18,38,.85);backdrop-filter:blur(6px);overflow-y:auto;}
+.screen{position:absolute;inset:0;z-index:8;display:flex;align-items:center;justify-content:center;
+  background:rgba(9,18,38,.88);backdrop-filter:blur(6px);padding:26px 30px;}
 .screen[hidden]{display:none;}
-.screen h1{font-family:"Space Grotesk",sans-serif;font-weight:700;margin:0;font-size:38px;line-height:1.04;letter-spacing:-.5px;}
-.screen h2{font-family:"Space Grotesk",sans-serif;font-weight:600;margin:0;font-size:29px;}
-.screen .sub{color:var(--pb-muted);font-size:13.5px;max-width:310px;line-height:1.5;margin:0;}
-.how{background:rgba(255,255,255,.04);border:1px solid var(--pb-line);border-radius:14px;padding:14px 16px;max-width:330px;text-align:left;}
+
+/* Title screen: two columns for landscape */
+.title-grid{display:flex;align-items:center;gap:34px;max-width:840px;width:100%;justify-content:center;}
+.title-left{display:flex;flex-direction:column;align-items:flex-start;gap:12px;flex:0 0 auto;max-width:330px;}
+.title-left .screenLogo{height:44px;width:auto;display:block;}
+.title-left h1{font-family:"Space Grotesk",sans-serif;font-weight:700;margin:0;font-size:44px;line-height:1.02;letter-spacing:-.5px;text-align:left;}
+.title-left .sub{color:var(--pb-muted);font-size:13.5px;line-height:1.5;margin:0;text-align:left;}
+.title-right{flex:1 1 auto;max-width:400px;}
+
+.how{background:rgba(255,255,255,.04);border:1px solid var(--pb-line);border-radius:14px;padding:14px 16px;text-align:left;}
 .how ol{margin:0;padding-left:20px;}
-.how li{font-size:13px;line-height:1.5;color:#cfdcf5;margin-bottom:6px;}
+.how li{font-size:13px;line-height:1.48;color:#cfdcf5;margin-bottom:5px;}
 .how li:last-child{margin-bottom:0;}
-.legend{display:flex;gap:14px;justify-content:center;margin-top:2px;flex-wrap:wrap;}
+.legend{display:flex;gap:14px;margin-top:10px;flex-wrap:wrap;}
 .legend .item{display:flex;align-items:center;gap:6px;font-size:12px;color:#cfdcf5;}
 .legend .sw{width:22px;height:11px;border-radius:3px;}
 .legend .sw.hit{background:var(--pb-mint);}
 .legend .sw.avoid{background:var(--pb-red);}
 .legend .sw.mark{background:var(--pb-magenta-soft);width:4px;height:16px;border-radius:2px;}
 
+/* Game over: centred column */
+.over-col{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:11px;text-align:center;max-width:420px;}
+.over-col .screenLogo{height:38px;width:auto;display:block;}
+.over-col h2{font-family:"Space Grotesk",sans-serif;font-weight:600;margin:0;font-size:30px;}
+.over-col .sub{color:var(--pb-muted);font-size:13.5px;line-height:1.5;margin:0;}
+
 .btn{appearance:none;border:0;cursor:pointer;font-family:"Space Grotesk",sans-serif;font-weight:600;
-  font-size:17px;padding:15px 26px;border-radius:13px;width:100%;max-width:320px;transition:transform .12s,filter .12s;}
+  font-size:17px;padding:14px 26px;border-radius:13px;width:100%;max-width:330px;transition:transform .12s,filter .12s;}
 .btn:active{transform:translateY(1px) scale(.99);}
 .btn:focus-visible{outline:3px solid var(--pb-magenta-soft);outline-offset:3px;}
 .btn.primary{background:var(--pb-magenta);color:#fff;box-shadow:0 10px 24px rgba(229,0,125,.35);}
@@ -116,13 +128,20 @@ canvas{position:absolute;inset:0;width:100%;height:100%;display:block;}
 .btn.ghost{background:transparent;color:var(--pb-text);border:1px solid var(--pb-line);}
 .btn.ghost:hover{background:rgba(255,255,255,.05);}
 
-.result-stats{display:flex;gap:24px;justify-content:center;margin:2px 0 6px;}
+.result-stats{display:flex;gap:26px;justify-content:center;margin:2px 0 4px;}
 .result-stats .n{font-family:"Space Grotesk",sans-serif;font-weight:700;font-size:30px;line-height:1;}
 .result-stats .n.hi{color:var(--pb-amber);}
 .result-stats .l{font-size:10px;color:var(--pb-muted);letter-spacing:1.4px;text-transform:uppercase;margin-top:5px;}
-.stack{display:flex;flex-direction:column;gap:11px;width:100%;align-items:center;}
-.privacy{font-size:11px;color:var(--pb-muted);max-width:300px;line-height:1.5;}
+.stack{display:flex;flex-direction:column;gap:10px;width:100%;align-items:center;}
+.privacy{font-size:11px;color:var(--pb-muted);line-height:1.5;max-width:340px;}
 .privacy a{color:var(--pb-magenta-soft);text-decoration:underline;}
+
+/* Nudge to rotate if held in portrait */
+.rotate{position:absolute;inset:0;z-index:10;display:none;align-items:center;justify-content:center;
+  flex-direction:column;gap:10px;text-align:center;padding:30px;background:rgba(9,18,38,.95);}
+.rotate .icon{font-size:40px;}
+.rotate p{margin:0;font-size:14px;color:var(--pb-muted);max-width:260px;line-height:1.5;}
+@media (max-aspect-ratio: 1/1){ .rotate{display:flex;} }
 
 @media (prefers-reduced-motion: reduce){ .flash.show,.pulseIn{animation:none;opacity:1;} }
 </style>
@@ -131,9 +150,9 @@ canvas{position:absolute;inset:0;width:100%;height:100%;display:block;}
 <div class="stage" id="stage">
 
   <div class="brand">
-    <span class="logo">Price <b>Bailey</b></span>
+    <img class="logo" src="PB%20Box%20Logo.png" alt="Price Bailey" />
     <span class="tag">STEADY HANDS</span>
-    <button class="soundBtn" id="soundBtn" aria-label="Toggle heartbeat sound" title="Sound">&#128266;</button>
+    <button class="soundBtn" id="soundBtn" aria-label="Toggle sound" title="Sound">&#128266;</button>
   </div>
 
   <div class="hud" id="hud" hidden>
@@ -159,52 +178,69 @@ canvas{position:absolute;inset:0;width:100%;height:100%;display:block;}
 
   <div class="flash" id="flash"></div>
 
+  <!-- Start screen -->
   <div class="screen" id="titleScreen">
-    <h1>Steady<br>Hands</h1>
-    <p class="sub">A Price Bailey precision challenge. Lift each prescription with a steady hand.</p>
-    <div class="how">
-      <ol>
-        <li>A marker sweeps across the track.</li>
-        <li>Tap when it crosses the <b>green zone</b> to file the prescription.</li>
-        <li>Hit the centre for a clean lift bonus.</li>
-        <li>Each round gets faster and tighter, and the green zone starts to move.</li>
-        <li>Further in, <b>pink zones</b> appear. Never tap on pink.</li>
-        <li>Three slips ends the shift.</li>
-      </ol>
-      <div class="legend">
-        <span class="item"><span class="sw hit"></span>Tap</span>
-        <span class="item"><span class="sw avoid"></span>Avoid</span>
-        <span class="item"><span class="sw mark"></span>Marker</span>
+    <div class="title-grid">
+      <div class="title-left">
+        <img class="screenLogo" src="PB%20Box%20Logo.png" alt="Price Bailey" />
+        <h1>Steady<br>Hands</h1>
+        <p class="sub">A Price Bailey precision challenge. File each prescription with a steady hand.</p>
+        <button class="btn primary" id="startBtn">Start shift</button>
+      </div>
+      <div class="title-right">
+        <div class="how">
+          <ol>
+            <li>A marker sweeps across the track.</li>
+            <li>Tap anywhere when it crosses the <b>green zone</b> to file the prescription.</li>
+            <li>Hit the centre for a clean lift bonus.</li>
+            <li>Each round gets faster and tighter, and the green zone starts to move.</li>
+            <li>Further in, <b>pink zones</b> appear. Never tap on pink.</li>
+            <li>Three slips ends the shift.</li>
+          </ol>
+          <div class="legend">
+            <span class="item"><span class="sw hit"></span>Tap</span>
+            <span class="item"><span class="sw avoid"></span>Avoid</span>
+            <span class="item"><span class="sw mark"></span>Marker</span>
+          </div>
+        </div>
       </div>
     </div>
-    <button class="btn primary" id="startBtn">Start shift</button>
-    <p class="privacy">Tap anywhere to lift. Space or Enter works too.</p>
   </div>
 
+  <!-- Game over -->
   <div class="screen" id="overScreen" hidden>
-    <h2>Shift complete</h2>
-    <p class="sub" id="perfMsg">Nicely handled.</p>
-    <div class="result-stats">
-      <div class="cell"><div class="n" id="finalScore">0</div><div class="l">Score</div></div>
-      <div class="cell"><div class="n hi" id="bestScore">0</div><div class="l">Best</div></div>
+    <div class="over-col">
+      <img class="screenLogo" src="PB%20Box%20Logo.png" alt="Price Bailey" />
+      <h2>Shift complete</h2>
+      <p class="sub" id="perfMsg">Nicely handled.</p>
+      <div class="result-stats">
+        <div class="cell"><div class="n" id="finalScore">0</div><div class="l">Score</div></div>
+        <div class="cell"><div class="n hi" id="bestScore">0</div><div class="l">Best</div></div>
+      </div>
+      <div class="stack">
+        <button class="btn primary" id="leadBtn">Leave your details</button>
+        <button class="btn ghost" id="againBtn">Play again</button>
+      </div>
+      <p class="privacy">We only use your details to follow up about your enquiry.
+        See our <a href="https://www.pricebailey.co.uk/privacy-policy/" target="_blank" rel="noopener">privacy notice</a>.</p>
     </div>
-    <div class="stack">
-      <button class="btn primary" id="leadBtn">Leave your details</button>
-      <button class="btn ghost" id="againBtn">Play again</button>
-    </div>
-    <p class="privacy">We only use your details to follow up about your enquiry.
-      See our <a href="https://www.pricebailey.co.uk/privacy-policy/" target="_blank" rel="noopener">privacy notice</a>.</p>
+  </div>
+
+  <!-- Portrait nudge -->
+  <div class="rotate">
+    <div class="icon">&#128241;</div>
+    <p>Turn your tablet to landscape to play Steady Hands.</p>
   </div>
 
 </div>
 
 <script>
 /* =========================================================
-   STEADY HANDS  (tap-timing build)
+   STEADY HANDS  (landscape tablet build)
    Tap when the marker crosses the green zone to file the
-   prescription. Wins drop into the file tray, misses are
-   thrown to the bin. Heartbeat speeds up as you progress and
-   dips on misses, with a sound synced to its rhythm.
+   prescription. Wins drop into the file tray, misses go to
+   the bin. Heartbeat speeds up and gets louder as difficulty
+   rises, and dips on a miss.
    ========================================================= */
 
 /* ---- PLACEHOLDER PRESCRIPTIONS -----------------------------
@@ -218,8 +254,7 @@ var PRESCRIPTIONS = [
 
 /* ---- WPForms lead capture (per Price Bailey spec) ----------
    Form ID 72332. Score -> wpf72332_23. Game URL -> wpf72332_31.
-   Opens in a new tab. TODO before publishing: confirm the live
-   GitHub Pages URL and that field IDs match this game's form. */
+   TODO before publishing: confirm live GitHub Pages URL and field IDs. */
 function openEnquiryForm(finalScore){
   var s=Math.max(0,Math.floor(finalScore));
   var gameUrl=encodeURIComponent(window.location.href);
@@ -242,9 +277,10 @@ function resize(){
   canvas.width=Math.round(W*DPR); canvas.height=Math.round(H*DPR); ctx.setTransform(DPR,0,0,DPR,0,0);
 }
 window.addEventListener("resize",resize);
+window.addEventListener("orientationchange",function(){ setTimeout(resize,120); });
 
 /* ---- State ---- */
-var state="title"; // title | countdown | playing | over
+var state="title";
 var score=0,combo=0,slips=0,level=0;
 var tool=0,dir=1,speed=0.55,locked=false;
 var currentRx=PRESCRIPTIONS[0];
@@ -252,12 +288,12 @@ var currentRx=PRESCRIPTIONS[0];
 var greenBase=0.5,greenHalf=0.16,greenAmp=0,greenFreq=0.7,greenCenter=0.5;
 var reds=[];
 
-/* Heartbeat */
-var heartRate=1.05, beatPhase=0, pulseKick=0, slipTint=0;
+/* Heartbeat: tempo and volume both scale with difficulty */
+var HR_MIN=1.05, HR_MAX=3.3;
+var heartRate=HR_MIN, beatPhase=0, pulseKick=0, slipTint=0;
 var GREEN=[47,214,165], RED=[255,84,104];
 
 var shake=0, particles=[];
-/* Prescription card animation: idle -> file (win) or toss (miss) -> done */
 var card={mode:"idle",t:0}; var CARD_DUR=0.66;
 
 /* ---- Difficulty per round ---- */
@@ -269,7 +305,7 @@ function configureRound(){
   greenBase= 0.26 + Math.random()*0.48;
   reds=[];
   var count = level>=10 ? 2 : (level>=6 ? 1 : 0);
-  var guard = greenHalf + greenAmp + 0.14;   // bigger reds need more clearance
+  var guard = greenHalf + greenAmp + 0.14;
   var tries=0;
   while(reds.length<count && tries<50){
     tries++;
@@ -277,7 +313,7 @@ function configureRound(){
     if(Math.abs(c-greenBase)<guard) continue;
     var ok=true;
     for(var k=0;k<reds.length;k++){ if(Math.abs(c-reds[k].center)<0.24){ok=false;break;} }
-    if(ok) reds.push({center:c, half:0.09});   // larger avoid zones
+    if(ok) reds.push({center:c, half:0.09});
   }
 }
 function newRound(){
@@ -288,33 +324,80 @@ function newRound(){
   document.getElementById("roundN").textContent="Round "+(level+1);
 }
 
-/* ---- Audio (heartbeat, synced to rhythm) ---- */
-var audioCtx=null, soundOn=true;
+/* ---- Audio ------------------------------------------------
+   One master gain so everything is comfortably loud on a stand.
+   Heartbeat volume rises with excitement, alongside its tempo. */
+var audioCtx=null, master=null, soundOn=true;
 function initAudio(){
-  if(!audioCtx){ try{ audioCtx=new (window.AudioContext||window.webkitAudioContext)(); }catch(e){ audioCtx=null; } }
+  if(!audioCtx){
+    try{
+      audioCtx=new (window.AudioContext||window.webkitAudioContext)();
+      master=audioCtx.createGain();
+      master.gain.value=0.9;             // overall loudness
+      master.connect(audioCtx.destination);
+    }catch(e){ audioCtx=null; }
+  }
   if(audioCtx && audioCtx.state==="suspended") audioCtx.resume();
 }
+function excitement(){ return Math.min(1, Math.max(0, (heartRate-HR_MIN)/(HR_MAX-HR_MIN))); }
+
+/* Heartbeat thump. Louder and slightly sharper as excitement rises. */
 function thump(at,freq,vol){
   var o=audioCtx.createOscillator(), g=audioCtx.createGain();
   o.type="sine"; o.frequency.setValueAtTime(freq,at);
-  o.frequency.exponentialRampToValueAtTime(freq*0.55,at+0.12);
+  o.frequency.exponentialRampToValueAtTime(freq*0.55,at+0.11);
   g.gain.setValueAtTime(0.0001,at);
-  g.gain.exponentialRampToValueAtTime(vol,at+0.008);
-  g.gain.exponentialRampToValueAtTime(0.0001,at+0.17);
-  o.connect(g); g.connect(audioCtx.destination); o.start(at); o.stop(at+0.22);
+  g.gain.exponentialRampToValueAtTime(vol,at+0.006);
+  g.gain.exponentialRampToValueAtTime(0.0001,at+0.18);
+  o.connect(g); g.connect(master); o.start(at); o.stop(at+0.23);
 }
 function playHeartbeat(){
   if(!soundOn||!audioCtx) return;
-  var excite=Math.min(1,Math.max(0,(heartRate-1.05)/(2.6-1.05)));
-  var v=0.5+0.35*excite, now=audioCtx.currentTime;
-  thump(now,58,v);          // lub
-  thump(now+0.14,44,v*0.7); // dub
+  var e=excitement();
+  var v=0.85+0.75*e;                     // clearly louder as it intensifies
+  var gap=0.15-0.04*e;                   // lub-dub tightens at speed
+  var now=audioCtx.currentTime;
+  thump(now, 60+10*e, v);
+  thump(now+gap, 46+8*e, v*0.72);
+}
+
+/* Correct: bright rising two-note chime */
+function playCorrect(clean){
+  if(!soundOn||!audioCtx) return;
+  var now=audioCtx.currentTime;
+  var notes = clean ? [784,1175] : [659,880];   // clean lift is higher and brighter
+  for(var i=0;i<notes.length;i++){
+    (function(f,idx){
+      var at=now+idx*0.09;
+      var o=audioCtx.createOscillator(), g=audioCtx.createGain();
+      o.type="triangle"; o.frequency.setValueAtTime(f,at);
+      g.gain.setValueAtTime(0.0001,at);
+      g.gain.exponentialRampToValueAtTime(clean?0.5:0.38,at+0.012);
+      g.gain.exponentialRampToValueAtTime(0.0001,at+0.26);
+      o.connect(g); g.connect(master); o.start(at); o.stop(at+0.3);
+    })(notes[i],i);
+  }
+}
+
+/* Wrong: low descending buzz, clearly different from the chime */
+function playWrong(){
+  if(!soundOn||!audioCtx) return;
+  var now=audioCtx.currentTime;
+  var o=audioCtx.createOscillator(), g=audioCtx.createGain(), f=audioCtx.createBiquadFilter();
+  o.type="sawtooth";
+  o.frequency.setValueAtTime(220,now);
+  o.frequency.exponentialRampToValueAtTime(70,now+0.42);
+  f.type="lowpass"; f.frequency.setValueAtTime(900,now);
+  g.gain.setValueAtTime(0.0001,now);
+  g.gain.exponentialRampToValueAtTime(0.55,now+0.015);
+  g.gain.exponentialRampToValueAtTime(0.0001,now+0.45);
+  o.connect(f); f.connect(g); g.connect(master); o.start(now); o.stop(now+0.5);
 }
 
 /* ---- Flow ---- */
 function startGame(){
   initAudio();
-  score=0;combo=0;slips=0;level=0;particles=[];pulseKick=0;slipTint=0;heartRate=1.05;beatPhase=0;
+  score=0;combo=0;slips=0;level=0;particles=[];pulseKick=0;slipTint=0;heartRate=HR_MIN;beatPhase=0;
   document.getElementById("titleScreen").hidden=true;
   document.getElementById("overScreen").hidden=true;
   document.getElementById("hud").hidden=false;
@@ -365,18 +448,20 @@ function attemptLift(){
   if(result==="slip"){
     combo=0; slips++;
     slipTint=1; pulseKick=0;
-    heartRate=Math.max(0.72, heartRate-0.5);   // heartbeat slows on a miss
+    heartRate=Math.max(0.72, heartRate-0.55);   // heartbeat slows on a miss
     shake=reduceMotion?0:12;
-    card.mode="toss"; card.t=0;                 // prescription thrown away
+    card.mode="toss"; card.t=0;
+    playWrong();
     showFlash(onRed?"Avoid the pink":"Slip","#ff5468");
   } else {
     combo++;
     var base=result==="clean"?100:55, gained=base*combo;
     score+=gained; level++;
     pulseKick=result==="clean"?1:0.6;
-    card.mode="file"; card.t=0;                 // prescription filed
+    card.mode="file"; card.t=0;
+    playCorrect(result==="clean");
     spawnParticles(trayPos().x, trayPos().y, result==="clean"?22:12);
-    showFlash((result==="clean"?"Filed  +":"Filed  +")+gained, result==="clean"?"#ffb23e":"#2fd6a5");
+    showFlash("Filed  +"+gained, result==="clean"?"#ffb23e":"#2fd6a5");
   }
   updateHud();
   setTimeout(function(){
@@ -423,26 +508,29 @@ function lerp(a,b,p){return a+(b-a)*p;}
 function easeInOut(p){return p<0.5?2*p*p:1-Math.pow(-2*p+2,2)/2;}
 function mix(c1,c2,t){return "rgb("+Math.round(c1[0]+(c2[0]-c1[0])*t)+","+Math.round(c1[1]+(c2[1]-c1[1])*t)+","+Math.round(c1[2]+(c2[2]-c1[2])*t)+")";}
 function roundRect(x,y,w,h,r){ctx.beginPath();ctx.moveTo(x+r,y);ctx.arcTo(x+w,y,x+w,y+h,r);ctx.arcTo(x+w,y+h,x,y+h,r);ctx.arcTo(x,y+h,x,y,r);ctx.arcTo(x,y,x+w,y,r);ctx.closePath();}
-function cardHome(){ return {x:W*0.5, y:H*0.26}; }
-function trayPos(){ return {x:W*0.30, y:H*0.88}; }
-function binPos(){ return {x:W*0.72, y:H*0.88}; }
+
+/* Landscape layout anchors */
+function cardHome(){ return {x:W*0.50, y:H*0.33}; }
+function trayPos(){  return {x:W*0.12, y:H*0.84}; }
+function binPos(){   return {x:W*0.88, y:H*0.84}; }
+var TRACK_Y=0.585, PULSE_Y=0.84;
 
 /* ---- Rendering ---- */
 function drawSlipShape(){
-  var w=W*0.58, h=H*0.145, x=-w/2, y=-h/2;
+  var w=W*0.30, h=H*0.20, x=-w/2, y=-h/2;
   roundRect(x,y,w,h,10); ctx.fillStyle="#f5f7fc"; ctx.fill();
   ctx.strokeStyle="rgba(0,0,0,.08)"; ctx.lineWidth=1; ctx.stroke();
   roundRect(x,y,w,h*0.30,10); ctx.fillStyle="#e5007d"; ctx.fill();
   ctx.fillStyle="#fff"; ctx.textBaseline="middle"; ctx.textAlign="left";
-  ctx.font="700 "+Math.round(H*0.016)+"px 'Space Grotesk',sans-serif";
+  ctx.font="700 "+Math.round(H*0.030)+"px 'Space Grotesk',sans-serif";
   ctx.fillText("Rx  Price Bailey Practice", x+13, y+h*0.15);
   ctx.fillStyle="#12213f"; ctx.textAlign="center";
-  ctx.font="600 "+Math.round(H*0.021)+"px Inter,sans-serif";
-  ctx.fillText(currentRx, 0, y+h*0.60);
+  ctx.font="600 "+Math.round(H*0.040)+"px Inter,sans-serif";
+  ctx.fillText(currentRx, 0, y+h*0.58);
   ctx.strokeStyle="rgba(18,33,63,.25)"; ctx.lineWidth=1;
   ctx.beginPath(); ctx.moveTo(x+13,y+h*0.84); ctx.lineTo(x+w*0.55,y+h*0.84); ctx.stroke();
   ctx.fillStyle="rgba(18,33,63,.5)"; ctx.textAlign="left";
-  ctx.font="400 "+Math.round(H*0.012)+"px Inter,sans-serif";
+  ctx.font="400 "+Math.round(H*0.023)+"px Inter,sans-serif";
   ctx.fillText("Signed", x+13, y+h*0.93);
 }
 function drawPrescription(){
@@ -450,44 +538,45 @@ function drawPrescription(){
   var home=cardHome(), x=home.x,y=home.y,scale=1,rot=0,alpha=1;
   if(card.mode==="file"){
     var p=easeInOut(Math.min(1,card.t/CARD_DUR)), t=trayPos();
-    x=lerp(home.x,t.x,p); y=lerp(home.y,t.y-H*0.03,p);
-    scale=1-0.55*p; rot=0.12*p; alpha=p>0.85?(1-(p-0.85)/0.15):1;
+    x=lerp(home.x,t.x,p); y=lerp(home.y,t.y-H*0.05,p);
+    scale=1-0.6*p; rot=-0.10*p; alpha=p>0.85?(1-(p-0.85)/0.15):1;
   } else if(card.mode==="toss"){
     var p2=Math.min(1,card.t/CARD_DUR), b=binPos();
     x=lerp(home.x,b.x,p2);
-    y=lerp(home.y,b.y-H*0.03,p2)+Math.sin(p2*Math.PI)*(-H*0.10);
-    rot=p2*Math.PI*2.2; scale=1-0.45*p2; alpha=p2>0.7?(1-(p2-0.7)/0.3):1;
+    y=lerp(home.y,b.y-H*0.05,p2)+Math.sin(p2*Math.PI)*(-H*0.14);
+    rot=p2*Math.PI*2.2; scale=1-0.5*p2; alpha=p2>0.7?(1-(p2-0.7)/0.3):1;
   }
   ctx.save(); ctx.globalAlpha=Math.max(0,alpha);
   ctx.translate(x,y); ctx.rotate(rot); ctx.scale(scale,scale);
   drawSlipShape(); ctx.restore();
 }
 function drawFileTray(){
-  var t=trayPos(), w=W*0.24, h=H*0.05;
+  var t=trayPos(), w=W*0.13, h=H*0.10;
   ctx.save(); ctx.translate(t.x,t.y);
-  roundRect(-w*0.32,-h*1.35,w*0.42,h*0.5,4); ctx.fillStyle="#2a4680"; ctx.fill(); // tab
-  roundRect(-w/2,-h*0.95,w,h,6); ctx.fillStyle="#22406e"; ctx.fill();             // back
-  roundRect(-w/2,-h*0.15,w,h*0.72,6); ctx.fillStyle="#2f4f86"; ctx.fill();        // front
+  roundRect(-w*0.32,-h*1.30,w*0.42,h*0.45,4); ctx.fillStyle="#2a4680"; ctx.fill();
+  roundRect(-w/2,-h*0.95,w,h,7); ctx.fillStyle="#22406e"; ctx.fill();
+  roundRect(-w/2,-h*0.15,w,h*0.72,7); ctx.fillStyle="#2f4f86"; ctx.fill();
   ctx.strokeStyle="rgba(255,255,255,.12)"; ctx.lineWidth=1; ctx.stroke();
-  ctx.fillStyle="#9fb0d4";
-  ctx.font="600 "+Math.round(H*0.012)+"px Inter,sans-serif"; ctx.textAlign="center"; ctx.textBaseline="middle";
+  ctx.fillStyle="#9fb0d4"; ctx.textAlign="center"; ctx.textBaseline="middle";
+  ctx.font="600 "+Math.round(H*0.024)+"px Inter,sans-serif";
   ctx.fillText("Filed", 0, h*0.2);
   ctx.restore();
 }
 function drawBin(){
-  var b=binPos(), w=W*0.10, h=H*0.055;
+  var b=binPos(), w=W*0.06, h=H*0.11;
   ctx.save(); ctx.translate(b.x,b.y);
   ctx.strokeStyle="#5a6f96"; ctx.lineWidth=2; ctx.fillStyle="rgba(90,111,150,.14)";
   ctx.beginPath(); ctx.moveTo(-w/2,-h*0.5); ctx.lineTo(w/2,-h*0.5);
   ctx.lineTo(w*0.36,h*0.5); ctx.lineTo(-w*0.36,h*0.5); ctx.closePath(); ctx.fill(); ctx.stroke();
   ctx.beginPath(); ctx.moveTo(-w*0.62,-h*0.5); ctx.lineTo(w*0.62,-h*0.5); ctx.stroke();
   for(var i=-1;i<=1;i++){ ctx.beginPath(); ctx.moveTo(i*w*0.2,-h*0.35); ctx.lineTo(i*w*0.28,h*0.4); ctx.stroke(); }
-  ctx.fillStyle="#9fb0d4"; ctx.font="600 "+Math.round(H*0.012)+"px Inter,sans-serif";
-  ctx.textAlign="center"; ctx.textBaseline="top"; ctx.fillText("Discard", 0, h*0.62);
+  ctx.fillStyle="#9fb0d4"; ctx.textAlign="center"; ctx.textBaseline="top";
+  ctx.font="600 "+Math.round(H*0.024)+"px Inter,sans-serif";
+  ctx.fillText("Discard", 0, h*0.60);
   ctx.restore();
 }
 function drawTrack(now){
-  var trackY=H*0.50, trackX=W*0.12, trackW=W*0.76, trackH=H*0.030;
+  var trackY=H*TRACK_Y, trackX=W*0.10, trackW=W*0.80, trackH=H*0.045;
   roundRect(trackX,trackY-trackH/2,trackW,trackH,trackH/2);
   ctx.fillStyle="#12264a"; ctx.fill();
   ctx.strokeStyle="rgba(255,255,255,.06)"; ctx.lineWidth=1; ctx.stroke();
@@ -502,34 +591,32 @@ function drawTrack(now){
 
   greenCenter=greenBase + greenAmp*Math.sin(now*0.001*greenFreq*Math.PI*2);
   var gw=greenHalf*2*trackW, gx=trackX+greenCenter*trackW-gw/2;
-  roundRect(gx,trackY-trackH/2-2,gw,trackH+4,(trackH+4)/2);
+  roundRect(gx,trackY-trackH/2-3,gw,trackH+6,(trackH+6)/2);
   var g=ctx.createLinearGradient(gx,0,gx+gw,0);
   g.addColorStop(0,"rgba(47,214,165,.25)"); g.addColorStop(.5,"rgba(47,214,165,.9)"); g.addColorStop(1,"rgba(47,214,165,.25)");
   ctx.fillStyle=g; ctx.fill();
   var ccx=trackX+greenCenter*trackW;
   ctx.strokeStyle="rgba(255,255,255,.5)"; ctx.lineWidth=1.5;
-  ctx.beginPath(); ctx.moveTo(ccx,trackY-trackH); ctx.lineTo(ccx,trackY+trackH); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(ccx,trackY-trackH*0.9); ctx.lineTo(ccx,trackY+trackH*0.9); ctx.stroke();
 
   var mx=trackX+tool*trackW;
   ctx.save(); ctx.shadowColor="rgba(255,74,166,.7)"; ctx.shadowBlur=14; ctx.fillStyle="#ff4aa6";
-  ctx.beginPath(); ctx.moveTo(mx,trackY-trackH*1.9);
-  ctx.lineTo(mx-trackH*0.9,trackY-trackH*3.1); ctx.lineTo(mx+trackH*0.9,trackY-trackH*3.1);
+  ctx.beginPath(); ctx.moveTo(mx,trackY-trackH*1.5);
+  ctx.lineTo(mx-trackH*0.65,trackY-trackH*2.4); ctx.lineTo(mx+trackH*0.65,trackY-trackH*2.4);
   ctx.closePath(); ctx.fill(); ctx.restore();
-  ctx.fillStyle="#ff4aa6"; ctx.fillRect(mx-1.5,trackY-trackH*1.9,3,trackH*3.8);
+  ctx.fillStyle="#ff4aa6"; ctx.fillRect(mx-2,trackY-trackH*1.5,4,trackH*3.0);
 }
-
-/* Larger heartbeat, tempo and height driven by heartRate */
 function drawPulse(){
-  var baseY=H*0.70;
-  var excite=Math.min(1,Math.max(0,(heartRate-1.05)/(2.6-1.05)));
-  var amp=H*0.065 + H*0.055*excite + H*0.025*pulseKick;
+  var baseY=H*PULSE_Y;
+  var e=excitement();
+  var amp=H*0.075 + H*0.065*e + H*0.03*pulseKick;
   var col=mix(GREEN,RED,slipTint);
-  var x0=W*0.05,x1=W*0.95;
+  var x0=W*0.22, x1=W*0.78;   // sits between the tray and the bin
   ctx.save();
-  ctx.strokeStyle=col; ctx.globalAlpha=0.95; ctx.lineWidth=3.2;
+  ctx.strokeStyle=col; ctx.globalAlpha=0.95; ctx.lineWidth=3.4;
   ctx.lineJoin="round"; ctx.lineCap="round"; ctx.shadowColor=col; ctx.shadowBlur=14;
   ctx.beginPath();
-  var BEATS=2, pts=170;
+  var BEATS=2, pts=180;
   for(var i=0;i<=pts;i++){
     var fx=i/pts, x=x0+fx*(x1-x0);
     var phase=(((fx*BEATS - beatPhase)%1)+1)%1;
@@ -558,8 +645,8 @@ function loop(now){
     tool+=dir*speed*dt;
     if(tool>=1){tool=1;dir=-1;} if(tool<=0){tool=0;dir=1;}
   }
-  // heartbeat: excite with level, slow on miss (handled at miss time)
-  var targetRate=Math.min(1.05 + level*0.09, 2.6);
+  // heart rate climbs with the round, eases back after a miss
+  var targetRate=Math.min(HR_MIN + level*0.115, HR_MAX);
   if(state==="playing") heartRate += (targetRate-heartRate)*Math.min(1,dt*0.9);
   beatPhase += heartRate*dt;
   if(beatPhase>=1){ beatPhase-=1; if(state==="playing") playHeartbeat(); }
