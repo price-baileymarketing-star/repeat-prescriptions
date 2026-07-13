@@ -83,11 +83,11 @@ canvas{position:absolute;inset:0;width:100%;height:100%;display:block;}
 .pulseIn{animation:pulseIn .6s ease-out;}
 @keyframes pulseIn{0%{transform:scale(.5);opacity:0;}30%{opacity:1;}100%{transform:scale(1.25);opacity:0;}}
 
-/* Flash */
-.flash{position:absolute;left:0;right:0;top:31%;z-index:6;text-align:center;
-  font-family:"Space Grotesk",sans-serif;font-weight:700;font-size:28px;pointer-events:none;opacity:0;}
-.flash.show{animation:pop .55s ease-out;}
-@keyframes pop{0%{opacity:0;transform:translateY(10px) scale(.9);}22%{opacity:1;transform:none;}100%{opacity:0;transform:translateY(-9px);}}
+/* Flash sits below the track, clear of the prescription card */
+.flash{position:absolute;left:0;right:0;top:65%;z-index:6;text-align:center;
+  font-family:"Space Grotesk",sans-serif;font-weight:700;font-size:24px;pointer-events:none;opacity:0;}
+.flash.show{animation:pop .45s ease-out;}
+@keyframes pop{0%{opacity:0;transform:translateY(8px) scale(.92);}25%{opacity:1;transform:none;}100%{opacity:0;transform:translateY(-7px);}}
 
 /* Screens */
 .screen{position:absolute;inset:0;z-index:8;display:flex;align-items:center;justify-content:center;
@@ -470,10 +470,17 @@ function attemptLift(){
     newRound();
   },700);
 }
+/* Short delay so the prescription is already on its way to the tray or bin
+   before the result text appears, keeping the term readable */
+var flashTimer=null;
 function showFlash(text,color){
   var f=document.getElementById("flash");
-  f.textContent=text; f.style.color=color;
-  f.classList.remove("show");void f.offsetWidth;f.classList.add("show");
+  if(flashTimer) clearTimeout(flashTimer);
+  f.classList.remove("show");
+  flashTimer=setTimeout(function(){
+    f.textContent=text; f.style.color=color;
+    void f.offsetWidth; f.classList.add("show");
+  },200);
 }
 function updateHud(){
   document.getElementById("scoreN").textContent=score;
